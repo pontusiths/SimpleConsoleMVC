@@ -7,14 +7,12 @@ namespace SimpleConsoleMVC
     internal class Controller
     {
         private Context model;
-        private View view;
         private InfoMessageView welcomeView;
         private NavigationMenuView mainMenuView;
         private LoginView loginView;
 
-        public Controller(View view, Context model)
+        public Controller(Context model)
         {
-            this.view = view;
             this.model = model;
 
         }

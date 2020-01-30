@@ -7,8 +7,9 @@ namespace SimpleConsoleMVC
         static void Main(string[] args)
         {
             var model = new Context();
-            var view = new View();
-            var controller = new Controller(view, model);
+            //model.ConfigDatabase(blablabla);
+            //model.Connect();
+            var controller = new Controller(model);
             controller.Run();
         }
     }
