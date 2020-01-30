@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SimpleConsoleMVC
@@ -7,7 +8,9 @@ namespace SimpleConsoleMVC
     {
         private Context model;
         private View view;
-        private object user;
+        private InfoMessageView welcomeView;
+        private NavigationMenuView mainMenuView;
+        private LoginView loginView;
 
         public Controller(View view, Context model)
         {
@@ -18,31 +21,45 @@ namespace SimpleConsoleMVC
 
         internal void Run()
         {
-            GoToMainMenu();
+            GoToWelcomeScreen();
         }
 
-        public void GoToMainMenu()
+        public void GoToWelcomeScreen()
         {
-            view.NextMenu = GoToLoginScreen;
-            view.DisplayMainMenu();
+            if (welcomeView == null) welcomeView = new InfoMessageView
+            {
+                Message = "Welcome to this app",
+                Callback = GoToMainMenu
+            };
+            welcomeView.Display();
+        }
+
+        private void GoToMainMenu()
+        {
+            if (mainMenuView == null) mainMenuView = new NavigationMenuView
+            {
+                Message = "MainMenu",
+                MenuItems = new List<NavigationMenuItemView>
+                {
+                    new NavigationMenuItemView
+                    {
+                        Title = "Login",
+                        GoTo = GoToLoginScreen
+                    },
+                    new NavigationMenuItemView
+                    {
+                        Title = "Exit Program",
+                        GoTo = ()=>Environment.Exit(0)
+                    }
+                }
+            };
+            mainMenuView.Display();
         }
 
         private void GoToLoginScreen()
         {
-            view.ValidateLogin = ValidateLogin;
-            view.ValidInput = (s) => true; //sätt en validate metod här om det behövs.
-            view.GoToMenu = GoToMenu;
-            view.DisplayLoginScreen();
-
-        }
-
-        private void GoToMenu()
-        {
-            //view.ChoiceA = GoToUserList;
-            //view.ChoiceB = GoToProfile;
-            //view.ChoiceC = GoTo...;
-            //view.DisplayLoggedInMenu()
-
+            loginView = new LoginView{ ValidateLogin = ValidateLogin, LoginSuccessCallback = GoToProfile};
+            loginView.Display();
         }
 
         private bool ValidateLogin(string username, string password)
@@ -57,6 +74,12 @@ namespace SimpleConsoleMVC
                 return false;
             }
             return (user.password == password);
+        }
+
+        private void GoToProfile()
+        {
+            //init profile
+            //profileView.Display()
         }
     }
 }
