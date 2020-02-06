@@ -19,7 +19,33 @@ namespace SimpleConsoleMVC
 
         internal void Run()
         {
+            
             GoToWelcomeScreen();
+        }
+
+        private void GoToCalendarForm()
+        {
+            CalendarEvent calendarEvent = new CalendarEvent();
+            var formView = new FormView();
+            formView.formItems = new List<FormItem>
+            {
+                new FormItem
+                {
+                    Message = "Enter event name",
+                    SetReference = (s) => calendarEvent.Name = s,
+                },
+                new FormEnumItem
+                {
+                    EnumType = typeof(WeekDay),
+                    Message = "Select weekday",
+                    SetReference = (s) => calendarEvent.Day = (WeekDay)int.Parse(s)
+                },
+                new FormItem
+                {
+                    Message = "Enter duration of event in minutes",
+                    SetReference = (s) => calendarEvent.Minutes = int.Parse(s),
+                }
+            };
         }
 
         public void GoToWelcomeScreen()
